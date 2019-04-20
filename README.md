@@ -1,6 +1,13 @@
 JPath
 =====
 
+
+**A Java DSL for reading JSON documents.**
+
+
+JPath project is based on the Jayway JsonPath one and is a Java port of [Stefan Goessner JsonPath implementation](http://goessner.net/articles/JsonPath/).
+
+
 The JPath project is based on the 2.4.0 version of the [[Jayway JsonPath](https://github.com/json-path/JsonPath.git)] project (the last integrated changes were the ones held by the commit 39b489339c0c436a69177030f64b7f5691a2fea8) and reuses a wide range of data structures that were defined by this last one.
  
 The most important change introduced by the JPath project is the modularity of the usable JSON implementations; instead of  the all-in-one paradigm that was chosen by the Jayway JsonPath contributors, the JPath project provides a separated module for each referenced JSON implementation. Moreover it offers a generic extension model to easily adapt to any new JSON implementation.
@@ -16,18 +23,15 @@ in the Jayway JsonPath project :
 ```
 instead of [[0,1,null,2,3]] that would have been the result if the array had been seen as an entity to be evaluated by itself. In JPath project, the same PredicatePathToken returns this last result; to obtain the array of integer result you have to use a filter function, in that case the 'Child' one allowing to apply a Filter on the children of the evaluated model if any :
 
-```tJsonPath.parse("[0,1,null,2,3]").read("$.child([?(@)])") returns [0,1,null,2,3] ;
+```tJsonPath.parse("[0,1,null,2,3]").read("$.child([?(@)])") returns [0,1,null,2,3]  ;
 ```
+
 Why doing such a modification ? Because the fact that an array is never considered as an entity by itself when processing a predicate conducts in some bugs, even more so if a PredicatePathToken encloses another one (cf. IssuesTest#issue_287 ). 
 The FilterFunction mechanism allows to solve a few referenced and pending issues of the Jayway JsonPath project.
 
 New
 ---
--20 Apr 2019 - JPath 1.0.0
-
-**A Java DSL for reading JSON documents.**
-
-JPath project is based on the Jayway JsonPath one and is a Java port of [Stefan Goessner JsonPath implementation](http://goessner.net/articles/JsonPath/). 
+-20 Apr 2019 - JPath 1.0.0 
 
 News
 ----
@@ -119,19 +123,7 @@ Filters are logical expressions used to filter arrays. A typical filter would be
 | anyof                    | left has an intersection with right [?(@.sizes anyof ['M', 'L'])]     |
 | noneof                   | left has no intersection with right [?(@.sizes noneof ['M', 'L'])]    |
 | size                     | size of left (array or string) should match right                     |
-| empty                    | left (array or string) should be empty                                |
-
-Filter Functions
----------
-
-Filter Functions can be invoked at the tail end of a path - the input to a function is the output of the path expression.
-The function output is dictated by the function itself.
-
-| Function                  | Description                                                         | Output    |
-| :------------------------ | :------------------------------------------------------------------ |-----------|
-| child()                   | Provides the min value of an array of numbers                       | Array     |
-| first()                   | Provides the max value of an array of numbers                       | Array     |
-| last()                    | Provides the average value of an array of numbers                   | Array     |
+| empty                    | left (array or string) should be empty                                
 
 
 

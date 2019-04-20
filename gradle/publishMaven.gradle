@@ -5,7 +5,7 @@ def basePom = {
         name project.displayName
         packaging 'bundle'
         description project.description
-        url 'https://github.com/jayway/JsonPath'
+        url 'https://github.com/cmunilla/JPath'
 
         licenses {
             license {
@@ -16,9 +16,9 @@ def basePom = {
         }
 
         scm {
-            url 'scm:git:git://github.com/jayway/JsonPath.git'
-            connection 'scm:git:git://github.com/jayway/JsonPath.git'
-            developerConnection 'scm:git:git://github.com/jayway/JsonPath.git'
+            url 'scm:git:git://github.com/cmunilla/JPath'
+            connection 'scm:git:git://github.com/cmunilla/JPath.git'
+            developerConnection 'scm:git:git://github.com/cmunilla/JPath.git'
         }
 
         developers {
@@ -26,6 +26,11 @@ def basePom = {
                 id 'kalle.stenflo'
                 name 'Kalle Stenflo'
                 email 'kalle.stenflo (a) gmail.com'
+            }
+            developer {
+                id 'cmunilla'
+                name 'Christophe Munilla'
+                email 'cmunilla (a) cmssi.fr'
             }
         }
     }

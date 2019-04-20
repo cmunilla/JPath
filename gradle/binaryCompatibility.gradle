@@ -94,41 +94,41 @@ if (JavaVersion.current().isJava7Compatible()) {
     def engine = new MarkupTemplateEngine(this.class.classLoader, configDir, templateConfiguration)
 
 
-    subprojects {
-
-        task japicmp(type: me.champeau.gradle.ArtifactJapicmpTask) {
-            dependsOn jar
-            //baseline = "com.jayway.jsonpath:${project.name}:+@jar"  //latest release
-            baseline = 'com.jayway.jsonpath:jpath:1.0.0@jar'
-            to = jar.archivePath
-            accessModifier = 'protected'
-            onlyModified = true
-            failOnModification = false
-            txtOutputFile = file("$buildDir/reports/japi.txt")
-
-            def htmlReportFile = file("${buildDir}/reports/binary-compat-${project.name}.html")
-            inputs.file file("$configDir/$templateFile")
-            inputs.file templateFile
-            outputs.file htmlReportFile
-
-            def model = [title   : "Binary compatibility report for ${project.name}",
-                         project : project,
-                         baseline: baseline,
-                         archive : to.name]
-            outputProcessor(reportGenerator.curry(model))
-
-            doLast {
-                htmlReportFile.withWriter('utf-8') { wrt ->
-                    engine.createTemplateByPath(templateFile).make(model).writeTo(wrt)
-                }
-            }
-        }
-    }
-
-    subprojects {
-        check.dependsOn(checkBinaryCompatibility)
-        tasks.withType(me.champeau.gradle.ArtifactJapicmpTask) { task ->
-            checkBinaryCompatibility.dependsOn(task)
-        }
-    }
+//    subprojects {
+//
+//        task japicmp(type: me.champeau.gradle.ArtifactJapicmpTask) {
+//            dependsOn jar
+//            //baseline = "com.jayway.jsonpath:${project.name}:+@jar"  //latest release
+//            baseline = 'com.jayway.jsonpath:jpath:1.0.0@jar'
+//            to = jar.archivePath
+//            accessModifier = 'protected'
+//           onlyModified = true
+//            failOnModification = false
+//            txtOutputFile = file("$buildDir/reports/japi.txt")
+//
+//           def htmlReportFile = file("${buildDir}/reports/binary-compat-${project.name}.html")
+//            inputs.file file("$configDir/$templateFile")
+//            inputs.file templateFile
+//            outputs.file htmlReportFile
+//
+//            def model = [title   : "Binary compatibility report for ${project.name}",
+//                         project : project,
+//                         baseline: baseline,
+//                         archive : to.name]
+//            outputProcessor(reportGenerator.curry(model))
+//
+//            doLast {
+//                htmlReportFile.withWriter('utf-8') { wrt ->
+//                   engine.createTemplateByPath(templateFile).make(model).writeTo(wrt)
+//              }
+//            }
+//       }
+//    }
+//
+//    subprojects {
+//        check.dependsOn(checkBinaryCompatibility)
+//        tasks.withType(me.champeau.gradle.ArtifactJapicmpTask) { task ->
+//            checkBinaryCompatibility.dependsOn(task)
+//        }
+//    }
 }

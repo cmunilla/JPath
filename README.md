@@ -23,7 +23,7 @@ in the Jayway JsonPath project :
 ```
 instead of [[0,1,null,2,3]] that would have been the result if the array had been seen as an entity to be evaluated by itself. In JPath project, the same PredicatePathToken returns this last result; to obtain the array of integer result you have to use a filter function, in that case the 'Child' one allowing to apply a Filter on the children of the evaluated model if any :
 
-```tJsonPath.parse("[0,1,null,2,3]").read("$.child([?(@)])") returns [0,1,null,2,3]  ;
+```tJsonPath.parse("[0,1,null,2,3]").read("$.child([?(@)])") returns [0,1,null,2,3]  
 ```
 
 Why doing such a modification ? Because the fact that an array is never considered as an entity by itself when processing a predicate conducts in some bugs, even more so if a PredicatePathToken encloses another one (cf. IssuesTest#issue_287 ). 
@@ -32,9 +32,6 @@ The FilterFunction mechanism allows to solve a few referenced and pending issues
 New
 ---
 -20 Apr 2019 - JPath 1.0.0 
-
-News
-----
 
 05 Jul 2017 - Released JsonPath 2.4.0
 
@@ -53,12 +50,8 @@ News
 26 Sep 2014 - Released JsonPath 1.0.0 
 
 
-Getting Started
+Getting Startd
 ---------------
-
-JPath can be used
-
-If you need help ask questions at [Stack Overflow](http://stackoverflow.com/questions/tagged/jsonpath). Tag the question 'jsonpath' and 'java'.
 
 JPath expressions always refer to a JSON structure in the same way as XPath expression are used in combination 
 with an XML document. The "root member object" in JsonPath is always referred to as `$` regardless if it is an 
@@ -194,7 +187,7 @@ Given the json
 
 Reading a Document
 ------------------
-The simplest most straight forward way to use JsonPath is via the static read API.
+The simplest most straight forward way to use JPath is via the static read API.
 
 ```java
 String json = "...";
@@ -213,7 +206,7 @@ Object document = Configuration.defaultConfiguration().jsonProvider().parse(json
 String author0 = JsonPath.read(document, "$.store.book[0].author");
 String author1 = JsonPath.read(document, "$.store.book[1].author");
 ```
-JsonPath also provides a fluent API. This is also the most flexible one.
+JPath also provides a fluent API. This is also the most flexible one.
 
 ```java
 String json = "...";
@@ -223,23 +216,23 @@ ReadContext ctx = JsonPath.parse(json);
 List<String> authorsOfBooksWithISBN = ctx.read("$.store.book[?(@.isbn)].author");
 
 
-List<Map<String, Object>> expensiveBooks = JsonPath
-                            .using(configuration)
-                            .parse(json)
+List<Map<String, Object>> expensiveBooks = JsonPathh
+                            .using(configuration))
+                            .parse(json))
                             .read("$.store.book[?(@.price > 10)]", List.class);
 ```
 
 What is Returned When?
 ----------------------
-When using JsonPath in java its important to know what type you expect in your result. JsonPath will automatically 
+When using JPath in java its important to know what type you expect in your result. JPath will automatically 
 try to cast the result to the type expected by the invoker.
 
 ```java
 //Will throw an java.lang.ClassCastException    
-List<String> list = JsonPath.parse(json).read("$.store.book[0].author")
+List<String> list = JsonPath.parse(json).read("$.store.book[0].author"))
 
-//Works fine
-String author = JsonPath.parse(json).read("$.store.book[0].author")
+//Works finee
+String author = JsonPath.parse(json).read("$.store.book[0].author"))
 ```
 
 When evaluating a path you need to understand the concept of when a path is `definite`. A path is `indefinite` if it contains:
@@ -259,7 +252,7 @@ String json = "{\"date_as_long\" : 1411455611975}";
 Date date = JsonPath.parse(json).read("$['date_as_long']", Date.class);
 ```
 
-If you configure JsonPath to use `JacksonMappingProvider` or `GsonMappingProvider` you can even map your JsonPath output directly into POJO's.
+If you configure JPath to use `JacksonMappingProvider` or `GsonMappingProvider` you can even map your JPath output directly into POJO's.
 
 ```java
 Book book = JsonPath.parse(json).read("$.store.book[0]", Book.class);
@@ -275,15 +268,14 @@ List<String> titles = JsonPath.parse(JSON_DOCUMENT).read("$.store.book[*].title"
 
 Predicates
 ----------
-There are three different ways to create filter predicates in JsonPath.
+There are three different ways to create filter predicates in JPath.
 
 ### Inline Predicates
 
 Inline predicates are the ones defined in the path.
 
 ```java
-List<Map<String, Object>> books =  JsonPath.parse(json)
-                                     .read("$.store.book[?(@.price < 10)]");
+List<Map<String, Object>> books =  JsonPath.parse(json).read("$.store.book[?(@.price < 10)]");
 ```
 
 You can use `&&` and `||` to combine multiple predicates `[?(@.price < 10 && @.category == 'fiction')]` , 
@@ -295,7 +287,7 @@ You can use `!` to negate a predicate `[?(!(@.price < 10 && @.category == 'ficti
  
 Predicates can be built using the Filter API as shown below:
 
-```java
+```javaa
 import static com.jayway.jsonpath.JsonPath.parse;
 import static com.jayway.jsonpath.Criteria.where;
 import static com.jayway.jsonpath.Filter.filter;
@@ -340,13 +332,12 @@ List<Map<String, Object>> books =
    reader.read("$.store.book[?].isbn", List.class, booksWithISBN);
 ```
 
-Path vs Value
+Path vs Valuee
 -------------
 In the Goessner implementation a JsonPath can return either `Path` or `Value`. `Value` is the default and what all the examples above are returning. If you rather have the path of the elements our query is hitting this can be achieved with an option.
 
-```java
-Configuration conf = Configuration.builder()
-   .options(Option.AS_PATH_LIST).build();
+```javaa
+Configuration conf = Configuration.builder().options(Option.AS_PATH_LIST).build();
 
 List<String> pathList = using(conf).parse(json).read("$..author");
 
@@ -368,7 +359,7 @@ When creating your Configuration there are a few option flags that can alter the
 <br/>
 This option makes JsonPath return null for missing leafs. Consider the following json
 
-```javascript
+```javascriptt
 [
    {
       "name" : "john",

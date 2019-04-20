@@ -355,7 +355,6 @@ public class FilterCompiler  {
     private PathNode readPath() {
         char previousSignificantChar = filter.previousSignificantChar();
         int begin = filter.position();
-        boolean keepParenthesis = false;
 
         filter.incrementPosition(1); //skip $ and @
         while (filter.inBounds()) {
@@ -382,7 +381,6 @@ public class FilterCompiler  {
 	                        c-=1;
 	                        if(c==0) {
 	                            filter.incrementPosition(1);
-//	                            keepParenthesis = true;
 	                            break;
 	                        }
 	                    }
@@ -394,13 +392,9 @@ public class FilterCompiler  {
                 filter.incrementPosition(1);
             }
         }
-
         boolean shouldExists = !(previousSignificantChar == NOT);
         CharSequence path = filter.subSequence(begin, filter.position());
         PathNode pn = ValueNode.createPathNode(path, false, shouldExists);
-//        if(keepParenthesis) {
-//        	filter.decrementPosition(1);
-//        }
         return pn;
     }
 

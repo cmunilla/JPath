@@ -26,7 +26,8 @@ in the Jayway JsonPath project :
 instead of [[0,1,null,2,3],0,1,null,2,3] that would have been the result if the array had been seen as an entity to be evaluated by itself as well as its children. In JPath project, the same PredicatePathToken returns this last result; to obtain the array of integer result you have to use a filter function, in that case the 'Child' one allowing to apply a Filter on the children of the evaluated model if any :
 
 ```java
-tJsonPath.parse("[0,1,null,2,3]").read("$.child([?(@)])") returns [0,1,null,2,3] 
+
+JsonPath.parse("[0,1,null,2,3]").read("$.child([?(@)])") returns [0,1,null,2,3] 
  
 ```
 
@@ -35,7 +36,8 @@ The FilterFunction mechanism allows to solve a few referenced and pending issues
 
 New
 ---
--20 Apr 2019 - JPath 1.0.0 
+
+20 Apr 2019 - JPath 1.0.0 
 
 05 Jul 2017 - Released JsonPath 2.4.0
 

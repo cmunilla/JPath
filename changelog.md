@@ -1,3 +1,12 @@
+JPath 1.0.0 (2019-04-20)
+=====================
+* JsonProviders modularization
+* Default and basic JsonMapper implementation
+* introduce FilterFunction interface 
+* introduce Child, First, and Last FilterFunction implementations
+* Apply PredicatePathToken on JSON Array data structure
+* Bug fixes and improvements
+
 2.2.0 (2016-02-29)
 ===========
 * Upgraded dependency versions

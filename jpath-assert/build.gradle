@@ -1,0 +1,20 @@
+apply from: "$rootDir/gradle/publishMaven.gradle"
+
+description = "Assertions on Json using JPath"
+
+jar {
+    baseName 'jpath-assert'
+    manifest {
+        attributes 'Implementation-Title': 'jpath-assert', 'Implementation-Version': version
+    }
+}
+
+dependencies {
+    compile project(':jpath')
+    compile project(':json-provider-jsonsmart')
+    compile libs.hamcrestCore
+    compile libs.hamcrestLibrary
+    compile libs.slf4jApi
+
+    testCompile libs.test
+}

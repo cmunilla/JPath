@@ -1,18 +1,18 @@
 apply from: "$rootDir/gradle/publishMaven.gradle"
 
-description = "Java port of Stefan Goessner JsonPath."
+description = "JPath JsonProvider implementation for Tapestry JSON implementation"
 
 jar {
     baseName 'json-provider-tapestry'
     manifest {
         attributes 'Implementation-Title': 'json-provider-tapestry', 'Implementation-Version': version
-        instruction 'Fragment-Host', 'com.jayway.jsonpath.json-path'
+        instruction 'Fragment-Host', 'com.jayway.jsonpath.jpath'
 		instruction 'Provide-Capability', 'json-provider'
     }
 }
 
 dependencies {
-    compile project(':json-path') 
+    compile project(':jpath') 
     compile libs.tapestryJson
     compile libs.slf4jApi
 

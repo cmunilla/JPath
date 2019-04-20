@@ -31,7 +31,7 @@ allprojects {
     ext.buildTimestamp = new Date().format('yyyy-MM-dd HH:mm:ss')
 
     group = 'com.jayway.jsonpath'
-    version = '2.4.0' + (snapshotVersion ? "-SNAPSHOT" : "")
+    version = '1.0.0' + (snapshotVersion ? "-SNAPSHOT" : "")
 
     if (JavaVersion.current().isJava8Compatible()) {
         tasks.withType(Javadoc) {
@@ -77,5 +77,5 @@ task wrapper(type: Wrapper) {
 }
 
 //Task used by Heroku for staging
-task stage(dependsOn: [':json-path-web-test:clean', 'json-path-web-test:jar', 'json-path-web-test:shadowJar']) {}
+task stage(dependsOn: [':jpath-web-test:clean', 'jpath-web-test:jar', 'jpath-web-test:shadowJar']) {}
 apply from: "$rootDir/gradle/binaryCompatibility.gradle"

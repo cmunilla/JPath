@@ -1,16 +1,37 @@
-Jayway JsonPath
-=====================
+JPath
+=====
+
+The JPath project is based on the 2.4.0 version of the [[Jayway JsonPath](https://github.com/json-path/JsonPath.git)] project (the last integrated changes were the ones held by the commit 39b489339c0c436a69177030f64b7f5691a2fea8) and reuses a wide range of data structures that were defined by this last one.
+ 
+The most important change introduced by the JPath project is the modularity of the usable JSON implementations; instead of  the all-in-one paradigm that was chosen by the Jayway JsonPath contributors, the JPath project provides a separated module for each referenced JSON implementation. Moreover it offers a generic extension model to easily adapt to any new JSON implementation.
+
+It seems that the initial choice of json-smart (net.minidev:json-smart:2.3) as internally used implementation was motivated by the fact that in this implementation the JSON object data structure implements the java.util.Map interface, and the JSON array data structure implements the java.util.List interface, allowing in both cases to manipulate the content of a JSON document by abstracting JSON aspect. So, to allow the use of any other implementation in replacement of the json-smart one the JPath project provides a set of abstract wrappers to be extended and adapted to the implementation in use in manner of using JSON object and array data structures as respectively java.util.Map and java.util.List.
+
+Another change in the JPath project is that now a PredicatePathToken applies also on an array (in the Jayway JsonPath project it applies on its children only); the JPath project introduces so the concept of 'FilterFunction' which is simply a function call with a filter parameter to be applied at the current level of the evaluated model. Concretely, what it means :
+
+in the Jayway JsonPath project : 
+
+```
+ JsonPath.parse("[0,1,null,2,3]").read("$[?(@)]") returns [0,1,null,2,3]
+```
+instead of [[0,1,null,2,3]] that would have been the result if the array had been seen as an entity to be evaluated by itself. In JPath project, the same PredicatePathToken returns this last result; to obtain the array of integer result you have to use a filter function, in that case the 'Child' one allowing to apply a Filter on the children of the evaluated model if any :
+
+```tJsonPath.parse("[0,1,null,2,3]").read("$.child([?(@)])") returns [0,1,null,2,3] ;
+```
+Why doing such a modification ? Because the fact that an array is never considered as an entity by itself when processing a predicate conducts in some bugs, even more so if a PredicatePathToken encloses another one (cf. IssuesTest#issue_287 ). 
+The FilterFunction mechanism allows to solve a few referenced and pending issues of the Jayway JsonPath project.
+
+New
+---
+-20 Apr 2019 - JPath 1.0.0
 
 **A Java DSL for reading JSON documents.**
 
-[![Build Status](https://travis-ci.org/json-path/JsonPath.svg?branch=master)](https://travis-ci.org/json-path/JsonPath)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.jayway.jsonpath/json-path/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.jayway.jsonpath/json-path)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/com.jayway.jsonpath/json-path/badge.svg)](http://www.javadoc.io/doc/com.jayway.jsonpath/json-path)
-
-Jayway JsonPath is a Java port of [Stefan Goessner JsonPath implementation](http://goessner.net/articles/JsonPath/). 
+JPath project is based on the Jayway JsonPath one and is a Java port of [Stefan Goessner JsonPath implementation](http://goessner.net/articles/JsonPath/). 
 
 News
 ----
+
 05 Jul 2017 - Released JsonPath 2.4.0
 
 26 Jun 2017 - Released JsonPath 2.3.0
@@ -31,23 +52,15 @@ News
 Getting Started
 ---------------
 
-JsonPath is available at the Central Maven Repository. Maven users add this to your POM.
-
-```xml
-<dependency>
-    <groupId>com.jayway.jsonpath</groupId>
-    <artifactId>json-path</artifactId>
-    <version>2.3.0</version>
-</dependency>
-```
+JPath can be used
 
 If you need help ask questions at [Stack Overflow](http://stackoverflow.com/questions/tagged/jsonpath). Tag the question 'jsonpath' and 'java'.
 
-JsonPath expressions always refer to a JSON structure in the same way as XPath expression are used in combination 
+JPath expressions always refer to a JSON structure in the same way as XPath expression are used in combination 
 with an XML document. The "root member object" in JsonPath is always referred to as `$` regardless if it is an 
 object or array.
 
-JsonPath expressions can use the dot–notation
+JPath expressions can use the dot–notation
 
 `$.store.book[0].title`
 
@@ -77,13 +90,13 @@ Functions
 Functions can be invoked at the tail end of a path - the input to a function is the output of the path expression.
 The function output is dictated by the function itself.
 
-| Function                  | Description                                                        | Output    |
-| :------------------------ | :----------------------------------------------------------------- |-----------|
-| min()                    | Provides the min value of an array of numbers                       | Double    |
-| max()                    | Provides the max value of an array of numbers                       | Double    |
-| avg()                    | Provides the average value of an array of numbers                   | Double    |
-| stddev()                 | Provides the standard deviation value of an array of numbers        | Double    |
-| length()                 | Provides the length of an array                                     | Integer   |
+| Function                  | Description                                                         | Output    |
+| :------------------------ | :------------------------------------------------------------------ |-----------|
+| min()                     | Provides the min value of an array of numbers                       | Double    |
+| max()                     | Provides the max value of an array of numbers                       | Double    |
+| avg()                     | Provides the average value of an array of numbers                   | Double    |
+| stddev()                  | Provides the standard deviation value of an array of numbers        | Double    |
+| length()                  | Provides the length of an array                                     | Integer   |
 
 
 Filter Operators
@@ -91,20 +104,35 @@ Filter Operators
 
 Filters are logical expressions used to filter arrays. A typical filter would be `[?(@.age > 18)]` where `@` represents the current item being processed. More complex filters can be created with logical operators `&&` and `||`. String literals must be enclosed by single or double quotes (`[?(@.color == 'blue')]` or `[?(@.color == "blue")]`).   
 
-| Operator                 | Description                                                       |
-| :----------------------- | :---------------------------------------------------------------- |
-| ==                       | left is equal to right (note that 1 is not equal to '1')          |
-| !=                       | left is not equal to right                                        |
-| <                        | left is less than right                                           |
-| <=                       | left is less or equal to right                                    |
-| >                        | left is greater than right                                        |
-| >=                       | left is greater than or equal to right                            |
-| =~                       | left matches regular expression  [?(@.name =~ /foo.*?/i)]         |
-| in                       | left exists in right [?(@.size in ['S', 'M'])]                    |
-| nin                      | left does not exists in right                                     |
-| subsetof                 | left is a subset of right [?(@.sizes subsetof ['S', 'M', 'L'])]     |
-| size                     | size of left (array or string) should match right                 |
-| empty                    | left (array or string) should be empty                            |
+| Operator                 | Description                                                           |
+| :----------------------- | :-------------------------------------------------------------------- |
+| ==                       | left is equal to right (note that 1 is not equal to '1')              |
+| !=                       | left is not equal to right                                            |
+| <                        | left is less than right                                               |
+| <=                       | left is less or equal to right                                        |
+| >                        | left is greater than right                                            |
+| >=                       | left is greater than or equal to right                                |
+| =~                       | left matches regular expression  [?(@.name =~ /foo.*?/i)]             |
+| in                       | left exists in right [?(@.size in ['S', 'M'])]                        |
+| nin                      | left does not exists in right                                         |
+| subsetof                 | left is a subset of right [?(@.sizes subsetof ['S', 'M', 'L'])]       |
+| anyof                    | left has an intersection with right [?(@.sizes anyof ['M', 'L'])]     |
+| noneof                   | left has no intersection with right [?(@.sizes noneof ['M', 'L'])]    |
+| size                     | size of left (array or string) should match right                     |
+| empty                    | left (array or string) should be empty                                |
+
+Filter Functions
+---------
+
+Filter Functions can be invoked at the tail end of a path - the input to a function is the output of the path expression.
+The function output is dictated by the function itself.
+
+| Function                  | Description                                                         | Output    |
+| :------------------------ | :------------------------------------------------------------------ |-----------|
+| child()                   | Provides the min value of an array of numbers                       | Array     |
+| first()                   | Provides the max value of an array of numbers                       | Array     |
+| last()                    | Provides the average value of an array of numbers                   | Array     |
+
 
 
 Path Examples
@@ -239,7 +267,7 @@ String json = "{\"date_as_long\" : 1411455611975}";
 Date date = JsonPath.parse(json).read("$['date_as_long']", Date.class);
 ```
 
-If you configure JsonPath to use `JacksonMappingProvider` or GsonMappingProvider` you can even map your JsonPath output directly into POJO's.
+If you configure JsonPath to use `JacksonMappingProvider` or `GsonMappingProvider` you can even map your JsonPath output directly into POJO's.
 
 ```java
 Book book = JsonPath.parse(json).read("$.store.book[0]", Book.class);
@@ -322,7 +350,7 @@ List<Map<String, Object>> books =
 
 Path vs Value
 -------------
-In the Goessner implementation a JsonPath can return either `Path` or `Value`. `Value` is the default and what all the examples above are returning. If you rather have the path of the elements our query is hitting this can be acheived with an option.
+In the Goessner implementation a JsonPath can return either `Path` or `Value`. `Value` is the default and what all the examples above are returning. If you rather have the path of the elements our query is hitting this can be achieved with an option.
 
 ```java
 Configuration conf = Configuration.builder()
@@ -398,7 +426,7 @@ This option makes sure no exceptions are propagated from path evaluation. It fol
 
 ### JsonProvider SPI
 
-JsonPath is shipped with three different JsonProviders:
+JsonPath is shipped with five different JsonProviders:
 
 * [JsonSmartJsonProvider](https://code.google.com/p/json-smart/) (default)
 * [JacksonJsonProvider](https://github.com/FasterXML/jackson)

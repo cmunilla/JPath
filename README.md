@@ -18,12 +18,16 @@ Another change in the JPath project is that now a PredicatePathToken applies als
 
 in the Jayway JsonPath project : 
 
-```
- JsonPath.parse("[0,1,null,2,3]").read("$[?(@)]") returns [0,1,null,2,3]
-```
-instead of [[0,1,null,2,3]] that would have been the result if the array had been seen as an entity to be evaluated by itself. In JPath project, the same PredicatePathToken returns this last result; to obtain the array of integer result you have to use a filter function, in that case the 'Child' one allowing to apply a Filter on the children of the evaluated model if any :
+```java
 
-```tJsonPath.parse("[0,1,null,2,3]").read("$.child([?(@)])") returns [0,1,null,2,3]  
+ JsonPath.parse("[0,1,null,2,3]").read("$[?(@)]") returns [0,1,null,2,3]
+ 
+```
+instead of [[0,1,null,2,3],0,1,null,2,3] that would have been the result if the array had been seen as an entity to be evaluated by itself as well as its children. In JPath project, the same PredicatePathToken returns this last result; to obtain the array of integer result you have to use a filter function, in that case the 'Child' one allowing to apply a Filter on the children of the evaluated model if any :
+
+```java
+tJsonPath.parse("[0,1,null,2,3]").read("$.child([?(@)])") returns [0,1,null,2,3] 
+ 
 ```
 
 Why doing such a modification ? Because the fact that an array is never considered as an entity by itself when processing a predicate conducts in some bugs, even more so if a PredicatePathToken encloses another one (cf. IssuesTest#issue_287 ). 
